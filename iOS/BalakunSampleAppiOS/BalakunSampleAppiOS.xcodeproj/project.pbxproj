@@ -1,0 +1,548 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03199835A2BA7083AC450170 /* DemoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011CBB17214414755A1616AD /* DemoMessage.swift */; };
+		05C52960F57247D06706A888 /* DemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BD7823DDFCC6CCD50DAB66 /* DemoViewModel.swift */; };
+		0B95973EE3317085ADD5831E /* BalakunSampleAppiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE8362FB83DB2FF4827A4CA /* BalakunSampleAppiOS.swift */; };
+		115192BE6D0660E26C7DC6C9 /* DemoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BD7823DDFCC6CCD50DAB66 /* DemoViewModel.swift */; };
+		1520AC69170B8DA321CDFAB0 /* ConnectionStatusLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A11CE8EDE93B18A42BE833 /* ConnectionStatusLineView.swift */; };
+		156A3CC71E1659D4CA044FFE /* ChatTimelinePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB78634F37FA0FF9AD2E69 /* ChatTimelinePanelView.swift */; };
+		20560B9DFA082384F60594EC /* AssistantTextRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599E0C4EAD335D10D4A6DBA8 /* AssistantTextRenderer.swift */; };
+		2FBB7299FA2CE77CFC2DA30D /* SimpleTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6BB43A5E73B8E27BD8BDD1C /* SimpleTTSService.swift */; };
+		35462D1892D3BAAE630D86BA /* BalakunMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 445D4AE60AFEB1D1F7C0B36B /* BalakunMobileSDK */; };
+		37CA84EFE7F80C36AF47476C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D2D47C8F8D38B0790B5BED /* ContentView.swift */; };
+		396515BD594B9DE65E031C07 /* ChatComposerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2345C4FF80FF11F6141599AA /* ChatComposerBarView.swift */; };
+		634B6E8235D7E2CF0BA9D674 /* ChatMessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2479AD5A61346188D8579F /* ChatMessageBubbleView.swift */; };
+		721955229F3ED12678C17E39 /* SampleAppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2590EF2A0334AF33D9C0E70 /* SampleAppConfiguration.swift */; };
+		73C8E4648B2D56F154FAD2E5 /* ProductSuggestionsPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C45C875B68F6A7981DF55E /* ProductSuggestionsPanelView.swift */; };
+		7843085F766D3BB1A31F7E51 /* SimpleAppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4D184B08B60AF2193FD598 /* SimpleAppLogger.swift */; };
+		81A51EDF575786E20E69DA94 /* ConnectionStatusLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4A11CE8EDE93B18A42BE833 /* ConnectionStatusLineView.swift */; };
+		9DBE0D7531C1D053A31CD2AA /* SimpleTTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6BB43A5E73B8E27BD8BDD1C /* SimpleTTSService.swift */; };
+		A956DB3F3FC209642849688A /* DemoMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011CBB17214414755A1616AD /* DemoMessage.swift */; };
+		AA1A92AEE49628A0AA062EE4 /* ChatMessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F2479AD5A61346188D8579F /* ChatMessageBubbleView.swift */; };
+		AAC3CBDA1B6D63212C899288 /* BalakunMobileSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 02EA894C66992D88CEABDFFB /* BalakunMobileSDK */; };
+		ADB1C9B5FE33B562F9C85B34 /* DemoConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B5A4B02C6764E8B3C75DB7 /* DemoConnectionState.swift */; };
+		BC6372205262240F528D2D52 /* SimpleAppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4D184B08B60AF2193FD598 /* SimpleAppLogger.swift */; };
+		BCBA9DFB7C93B0FAB9243D7C /* BalakunTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE2136A4B25D330BE86D112 /* BalakunTheme.swift */; };
+		C4E14078887751F257DF6EF4 /* AssistantTextRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599E0C4EAD335D10D4A6DBA8 /* AssistantTextRenderer.swift */; };
+		CE16AACA0FA812BD9531FD30 /* ChatComposerBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2345C4FF80FF11F6141599AA /* ChatComposerBarView.swift */; };
+		D1A6DE4D9A2D246BE2497396 /* BalakunSampleAppiOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFE8362FB83DB2FF4827A4CA /* BalakunSampleAppiOS.swift */; };
+		D3B43AD89B43B6D9811BA47D /* DemoConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B5A4B02C6764E8B3C75DB7 /* DemoConnectionState.swift */; };
+		DDCBF47AED0D7F487AE10595 /* SampleAppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2590EF2A0334AF33D9C0E70 /* SampleAppConfiguration.swift */; };
+		EC397C5EBE4CDAB1D93EE062 /* ProductSuggestionsPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C45C875B68F6A7981DF55E /* ProductSuggestionsPanelView.swift */; };
+		EFE5490E5EE849D413CDF85A /* ChatTimelinePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB78634F37FA0FF9AD2E69 /* ChatTimelinePanelView.swift */; };
+		F61545FD322A52E9C8F188B6 /* BalakunTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE2136A4B25D330BE86D112 /* BalakunTheme.swift */; };
+		FB1FB06213ADC8CE6C5C49F7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25D2D47C8F8D38B0790B5BED /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		011CBB17214414755A1616AD /* DemoMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoMessage.swift; sourceTree = "<group>"; };
+		0F2479AD5A61346188D8579F /* ChatMessageBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageBubbleView.swift; sourceTree = "<group>"; };
+		2345C4FF80FF11F6141599AA /* ChatComposerBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatComposerBarView.swift; sourceTree = "<group>"; };
+		23C45C875B68F6A7981DF55E /* ProductSuggestionsPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSuggestionsPanelView.swift; sourceTree = "<group>"; };
+		25D2D47C8F8D38B0790B5BED /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		426672F82F638EC800FAAF9E /* LocalSecrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalSecrets.xcconfig; sourceTree = "<group>"; };
+		426672F92F638EC800FAAF9E /* LocalSecrets.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = LocalSecrets.xcconfig.example; sourceTree = "<group>"; };
+		52FB78634F37FA0FF9AD2E69 /* ChatTimelinePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTimelinePanelView.swift; sourceTree = "<group>"; };
+		599E0C4EAD335D10D4A6DBA8 /* AssistantTextRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantTextRenderer.swift; sourceTree = "<group>"; };
+		6210A1DF0BD014F9DCD71EAF /* BalakunSDKConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BalakunSDKConfig.xcconfig; sourceTree = "<group>"; };
+		65589C3FBB80C0A705934153 /* BalakunSampleAppiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BalakunSampleAppiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		720250E4DE97709AB4419A55 /* BalakunSampleAppMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BalakunSampleAppMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BE2136A4B25D330BE86D112 /* BalakunTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalakunTheme.swift; sourceTree = "<group>"; };
+		90B5A4B02C6764E8B3C75DB7 /* DemoConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoConnectionState.swift; sourceTree = "<group>"; };
+		C2590EF2A0334AF33D9C0E70 /* SampleAppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppConfiguration.swift; sourceTree = "<group>"; };
+		C6BB43A5E73B8E27BD8BDD1C /* SimpleTTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTTSService.swift; sourceTree = "<group>"; };
+		CD4D184B08B60AF2193FD598 /* SimpleAppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAppLogger.swift; sourceTree = "<group>"; };
+		E4A11CE8EDE93B18A42BE833 /* ConnectionStatusLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStatusLineView.swift; sourceTree = "<group>"; };
+		E5BD7823DDFCC6CCD50DAB66 /* DemoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewModel.swift; sourceTree = "<group>"; };
+		FFE8362FB83DB2FF4827A4CA /* BalakunSampleAppiOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalakunSampleAppiOS.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		04CFD1BBD10F6EAE29D8AADC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35462D1892D3BAAE630D86BA /* BalakunMobileSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F3D076D6C06C3D61EBD5021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAC3CBDA1B6D63212C899288 /* BalakunMobileSDK in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1283F698B99973225BC3954B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				65589C3FBB80C0A705934153 /* BalakunSampleAppiOS.app */,
+				720250E4DE97709AB4419A55 /* BalakunSampleAppMac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		42DDF1B22F6E618BA734DDCE = {
+			isa = PBXGroup;
+			children = (
+				F701B173F7EDD3E7F5A63F40 /* App */,
+				97C075BB259FC00D45DF0987 /* Config */,
+				1283F698B99973225BC3954B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		86E46DC6E0F9FEE693D1B73D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2345C4FF80FF11F6141599AA /* ChatComposerBarView.swift */,
+				0F2479AD5A61346188D8579F /* ChatMessageBubbleView.swift */,
+				52FB78634F37FA0FF9AD2E69 /* ChatTimelinePanelView.swift */,
+				E4A11CE8EDE93B18A42BE833 /* ConnectionStatusLineView.swift */,
+				23C45C875B68F6A7981DF55E /* ProductSuggestionsPanelView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		97C075BB259FC00D45DF0987 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				426672F82F638EC800FAAF9E /* LocalSecrets.xcconfig */,
+				426672F92F638EC800FAAF9E /* LocalSecrets.xcconfig.example */,
+				6210A1DF0BD014F9DCD71EAF /* BalakunSDKConfig.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		9C10D2C3918D8D932DDEA273 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				599E0C4EAD335D10D4A6DBA8 /* AssistantTextRenderer.swift */,
+				CD4D184B08B60AF2193FD598 /* SimpleAppLogger.swift */,
+				C6BB43A5E73B8E27BD8BDD1C /* SimpleTTSService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B00D34122098A5886D8009AD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				90B5A4B02C6764E8B3C75DB7 /* DemoConnectionState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F701B173F7EDD3E7F5A63F40 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FFE8362FB83DB2FF4827A4CA /* BalakunSampleAppiOS.swift */,
+				7BE2136A4B25D330BE86D112 /* BalakunTheme.swift */,
+				25D2D47C8F8D38B0790B5BED /* ContentView.swift */,
+				011CBB17214414755A1616AD /* DemoMessage.swift */,
+				E5BD7823DDFCC6CCD50DAB66 /* DemoViewModel.swift */,
+				C2590EF2A0334AF33D9C0E70 /* SampleAppConfiguration.swift */,
+				86E46DC6E0F9FEE693D1B73D /* Components */,
+				B00D34122098A5886D8009AD /* Models */,
+				9C10D2C3918D8D932DDEA273 /* Services */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		22C655E0E7DA65049B9EB50A /* BalakunSampleAppMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C963FBFD41FC483D3A39E85 /* Build configuration list for PBXNativeTarget "BalakunSampleAppMac" */;
+			buildPhases = (
+				1BAB74EBCDAF8D3A868FE608 /* Sources */,
+				04CFD1BBD10F6EAE29D8AADC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BalakunSampleAppMac;
+			packageProductDependencies = (
+				445D4AE60AFEB1D1F7C0B36B /* BalakunMobileSDK */,
+			);
+			productName = BalakunSampleAppMac;
+			productReference = 720250E4DE97709AB4419A55 /* BalakunSampleAppMac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FDE37A934C54E5970AAD6E23 /* BalakunSampleAppiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E34FF883D2F97526A3142123 /* Build configuration list for PBXNativeTarget "BalakunSampleAppiOS" */;
+			buildPhases = (
+				76D27352D484F0BF84B38CE3 /* Sources */,
+				8F3D076D6C06C3D61EBD5021 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BalakunSampleAppiOS;
+			packageProductDependencies = (
+				02EA894C66992D88CEABDFFB /* BalakunMobileSDK */,
+			);
+			productName = BalakunSampleAppiOS;
+			productReference = 65589C3FBB80C0A705934153 /* BalakunSampleAppiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		783CC58FCFA912B6635B983A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2630;
+			};
+			buildConfigurationList = 3C004B6B51616C362BF6A0B5 /* Build configuration list for PBXProject "BalakunSampleAppiOS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 42DDF1B22F6E618BA734DDCE;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AC5D235C144601296539FED9 /* XCRemoteSwiftPackageReference "Balakun-SDK" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 1283F698B99973225BC3954B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				22C655E0E7DA65049B9EB50A /* BalakunSampleAppMac */,
+				FDE37A934C54E5970AAD6E23 /* BalakunSampleAppiOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1BAB74EBCDAF8D3A868FE608 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1A6DE4D9A2D246BE2497396 /* BalakunSampleAppiOS.swift in Sources */,
+				BCBA9DFB7C93B0FAB9243D7C /* BalakunTheme.swift in Sources */,
+				396515BD594B9DE65E031C07 /* ChatComposerBarView.swift in Sources */,
+				AA1A92AEE49628A0AA062EE4 /* ChatMessageBubbleView.swift in Sources */,
+				EFE5490E5EE849D413CDF85A /* ChatTimelinePanelView.swift in Sources */,
+				1520AC69170B8DA321CDFAB0 /* ConnectionStatusLineView.swift in Sources */,
+				FB1FB06213ADC8CE6C5C49F7 /* ContentView.swift in Sources */,
+				ADB1C9B5FE33B562F9C85B34 /* DemoConnectionState.swift in Sources */,
+				03199835A2BA7083AC450170 /* DemoMessage.swift in Sources */,
+				115192BE6D0660E26C7DC6C9 /* DemoViewModel.swift in Sources */,
+				C4E14078887751F257DF6EF4 /* AssistantTextRenderer.swift in Sources */,
+				73C8E4648B2D56F154FAD2E5 /* ProductSuggestionsPanelView.swift in Sources */,
+				DDCBF47AED0D7F487AE10595 /* SampleAppConfiguration.swift in Sources */,
+				BC6372205262240F528D2D52 /* SimpleAppLogger.swift in Sources */,
+				2FBB7299FA2CE77CFC2DA30D /* SimpleTTSService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		76D27352D484F0BF84B38CE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0B95973EE3317085ADD5831E /* BalakunSampleAppiOS.swift in Sources */,
+				F61545FD322A52E9C8F188B6 /* BalakunTheme.swift in Sources */,
+				CE16AACA0FA812BD9531FD30 /* ChatComposerBarView.swift in Sources */,
+				634B6E8235D7E2CF0BA9D674 /* ChatMessageBubbleView.swift in Sources */,
+				156A3CC71E1659D4CA044FFE /* ChatTimelinePanelView.swift in Sources */,
+				81A51EDF575786E20E69DA94 /* ConnectionStatusLineView.swift in Sources */,
+				37CA84EFE7F80C36AF47476C /* ContentView.swift in Sources */,
+				D3B43AD89B43B6D9811BA47D /* DemoConnectionState.swift in Sources */,
+				A956DB3F3FC209642849688A /* DemoMessage.swift in Sources */,
+				05C52960F57247D06706A888 /* DemoViewModel.swift in Sources */,
+				20560B9DFA082384F60594EC /* AssistantTextRenderer.swift in Sources */,
+				EC397C5EBE4CDAB1D93EE062 /* ProductSuggestionsPanelView.swift in Sources */,
+				721955229F3ED12678C17E39 /* SampleAppConfiguration.swift in Sources */,
+				7843085F766D3BB1A31F7E51 /* SimpleAppLogger.swift in Sources */,
+				9DBE0D7531C1D053A31CD2AA /* SimpleTTSService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0DFC26FE7693869F917A7DB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		1B4042823C89765047E4AE55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6210A1DF0BD014F9DCD71EAF /* BalakunSDKConfig.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Resources/Info-iOS.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.waybeam.balakun.sample.ios;
+				PRODUCT_NAME = BalakunSampleAppiOS;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		67C58813AC38A60EC4F3CCFF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		CC810EC084DBB636F0EE3EAB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6210A1DF0BD014F9DCD71EAF /* BalakunSDKConfig.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Resources/Info-macOS.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.waybeam.balakun.sample.macos;
+				PRODUCT_NAME = BalakunSampleAppMac;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		EAB66C6A4BE57E895B606134 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6210A1DF0BD014F9DCD71EAF /* BalakunSDKConfig.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Resources/Info-macOS.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.waybeam.balakun.sample.macos;
+				PRODUCT_NAME = BalakunSampleAppMac;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F48A66CFCF86CE0AEB63026A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6210A1DF0BD014F9DCD71EAF /* BalakunSDKConfig.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Resources/Info-iOS.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.waybeam.balakun.sample.ios;
+				PRODUCT_NAME = BalakunSampleAppiOS;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C963FBFD41FC483D3A39E85 /* Build configuration list for PBXNativeTarget "BalakunSampleAppMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EAB66C6A4BE57E895B606134 /* Debug */,
+				CC810EC084DBB636F0EE3EAB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3C004B6B51616C362BF6A0B5 /* Build configuration list for PBXProject "BalakunSampleAppiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67C58813AC38A60EC4F3CCFF /* Debug */,
+				0DFC26FE7693869F917A7DB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E34FF883D2F97526A3142123 /* Build configuration list for PBXNativeTarget "BalakunSampleAppiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B4042823C89765047E4AE55 /* Debug */,
+				F48A66CFCF86CE0AEB63026A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AC5D235C144601296539FED9 /* XCRemoteSwiftPackageReference "Balakun-SDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Dmitry-Klymenko/Balakun-SDK.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		02EA894C66992D88CEABDFFB /* BalakunMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AC5D235C144601296539FED9 /* XCRemoteSwiftPackageReference "Balakun-SDK" */;
+			productName = BalakunMobileSDK;
+		};
+		445D4AE60AFEB1D1F7C0B36B /* BalakunMobileSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AC5D235C144601296539FED9 /* XCRemoteSwiftPackageReference "Balakun-SDK" */;
+			productName = BalakunMobileSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 783CC58FCFA912B6635B983A /* Project object */;
+}

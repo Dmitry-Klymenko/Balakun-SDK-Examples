@@ -60,3 +60,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Balakun examples local secrets
+/iOS/BalakunSampleAppiOS/Config/LocalSecrets.xcconfig
+
+# macOS / Xcode local artifacts
+.DS_Store
+DerivedData/

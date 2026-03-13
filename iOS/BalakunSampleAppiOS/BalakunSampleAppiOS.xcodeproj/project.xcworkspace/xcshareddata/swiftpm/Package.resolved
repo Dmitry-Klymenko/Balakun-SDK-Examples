@@ -1,0 +1,15 @@
+{
+  "originHash": "3a48d5d66adea6380e275ec732eceb97de5d200707b3427bf054231b2ffc6cab",
+  "pins": [
+    {
+      "identity": "balakun-sdk",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/Dmitry-Klymenko/Balakun-SDK.git",
+      "state": {
+        "branch": "main",
+        "revision": "1b0b4e7b9e4d63c53f5f7a1aabaab2578336ce80"
+      }
+    }
+  ],
+  "version": 3
+}

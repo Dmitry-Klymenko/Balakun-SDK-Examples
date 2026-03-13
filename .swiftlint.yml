@@ -1,0 +1,32 @@
+included:
+  - iOS/BalakunSampleAppiOS/App
+
+excluded:
+  - .build
+  - .swiftpm
+  - iOS/BalakunSampleAppiOS/BalakunSampleAppiOS.xcodeproj
+  - iOS/BalakunSampleAppiOS/Resources
+  - iOS/BalakunSampleAppiOS/Config
+
+opt_in_rules:
+  - empty_count
+  - explicit_init
+  - first_where
+  - sorted_first_last
+  - fatal_error_message
+
+disabled_rules:
+  - trailing_whitespace
+  - function_body_length
+  - type_body_length
+  - cyclomatic_complexity
+
+line_length:
+  warning: 160
+  error: 220
+
+file_length:
+  warning: 1000
+  error: 1600
+
+reporter: xcode

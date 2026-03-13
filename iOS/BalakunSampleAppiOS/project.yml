@@ -1,0 +1,71 @@
+name: BalakunSampleAppiOS
+options:
+  minimumXcodeGenVersion: 2.38.0
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: 16.0
+    MACOSX_DEPLOYMENT_TARGET: 13.0
+    CODE_SIGNING_ALLOWED: NO
+    CODE_SIGNING_REQUIRED: NO
+packages:
+  BalakunMobileSDK:
+    url: https://github.com/Dmitry-Klymenko/Balakun-SDK.git
+    branch: main
+targets:
+  BalakunSampleAppiOS:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    configFiles:
+      Debug: Config/BalakunSDKConfig.xcconfig
+      Release: Config/BalakunSDKConfig.xcconfig
+    sources:
+      - path: App
+    resources:
+      - path: Resources
+    dependencies:
+      - package: BalakunMobileSDK
+        product: BalakunMobileSDK
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.waybeam.balakun.sample.ios
+        PRODUCT_NAME: BalakunSampleAppiOS
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Resources/Info-iOS.plist
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+  BalakunSampleAppMac:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    configFiles:
+      Debug: Config/BalakunSDKConfig.xcconfig
+      Release: Config/BalakunSDKConfig.xcconfig
+    sources:
+      - path: App
+    resources:
+      - path: Resources
+    dependencies:
+      - package: BalakunMobileSDK
+        product: BalakunMobileSDK
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ai.waybeam.balakun.sample.macos
+        PRODUCT_NAME: BalakunSampleAppMac
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Resources/Info-macOS.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+schemes:
+  BalakunSampleAppiOS:
+    build:
+      targets:
+        BalakunSampleAppiOS: all
+    run:
+      config: Debug
+  BalakunSampleAppMac:
+    build:
+      targets:
+        BalakunSampleAppMac: all
+    run:
+      config: Debug
