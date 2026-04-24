@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Waybeam JS API QA Stub</title>
+</head>
+<body>
+  <h1>Waybeam JS API QA Stub</h1>
+  <p>Open DevTools console. This page installs the QA stub and exposes <code>window.waybeamQaStub</code>.</p>
+  <p>This is a minimal host-page harness. Replace basket handlers with the site's real basket API calls.</p>
+
+  <script>
+    window.WAYBEAM_QA_ADD_CANDIDATES = [
+      {
+        productUrl: 'https://example.com/product/example-1',
+        productId: 'example-product-1',
+        variantId: 'example-variant-1',
+        variantKey: 'example-product-1:example-variant-1',
+        quantity: 1,
+      },
+    ];
+
+    window.waybeam = window.waybeam || {
+      _q: [],
+      configure(patch) { this._q.push(['configure', patch]); },
+    };
+
+    window.waybeam.configure({
+      customer: { userId: 'qa-user-123', userName: 'QA User' },
+      async customerProvided(payload) {
+        console.log('[Host test] customerProvided received', payload);
+        return { ok: true };
+      },
+      basket: {
+        async get() {
+          console.log('[Host test] basket.get called');
+          return { currency: 'AUD', itemCount: 0, items: [] };
+        },
+        async add(input) {
+          console.log('[Host test] basket.add called', input);
+          return { ok: true };
+        },
+      },
+      qa: { getIntervalMs: 10000, autoStartGetPolling: true, autoAddIntervalMs: 0 },
+    });
+  </script>
+  <script src="./waybeam-js-stub.js"></script>
+</body>
+</html>
