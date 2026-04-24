@@ -23,11 +23,15 @@
       async get() {
         // ADD YOUR IMPLEMENTATION HERE, OR UNCOMMENT/KEEP THE DEFAULT HARDCODED RESPONSE BELOW.
         console.log('[Host test] basket.get');
-        return { currency: 'AUD', itemCount: 0, items: [] };
+        alert('Insert here your own implementation to read basket content'); 
+        // return myAsyncBasketReadFunction(); <= you need to create and define it
+        // or uncomment below default
+        // return { currency: 'AUD', itemCount: 0, items: [] };
       },
       async add(input) {
         // ADD YOUR IMPLEMENTATION HERE, OR UNCOMMENT/KEEP THE DEFAULT HARDCODED RESPONSE BELOW.
         console.log('[Host test] basket.add', input);
+        alert('Insert here your own implementation to add a product variant to the basket'); 
         return { ok: true };
       },
     },
