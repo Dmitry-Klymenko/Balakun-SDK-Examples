@@ -1,37 +1,42 @@
 /*
  * Waybeam JS API QA Stub
  *
- * Browser-only QA helper for validating a host page's Waybeam public JS API integration.
- * It does not render a widget and must not be shipped on production pages.
+ * A small browser helper for checking a host page's Waybeam JavaScript API integration.
+ * It is intentionally strict: wrong shapes are logged with console.error and then thrown.
+ *
+ * This file does not load or render the real Waybeam widget.
+ * Use it only for local QA, staging checks, and integrator troubleshooting.
  */
 (function installWaybeamQaStub(window) {
   'use strict';
 
-  var VERSION = '0.2.1';
   var PREFIX = '[Waybeam QA Stub]';
-  var DEFAULT_QA = {
-    getIntervalMs: 10000,
-    autoStartGetPolling: true,
-    autoAddIntervalMs: 0,
-    exposeDebugApi: true,
-  };
+  var VERSION = '0.2.2';
 
-  var existingApi = isObject(window.waybeam) ? window.waybeam : {};
-  var queuedCalls = Array.isArray(existingApi._q) ? existingApi._q.slice() : [];
-  var externalQa = isPlainObject(window.WAYBEAM_QA_STUB) ? window.WAYBEAM_QA_STUB : {};
+  var existing = isObject(window.waybeam) ? window.waybeam : {};
+  var queued = Array.isArray(existing._q) ? existing._q.slice() : [];
 
   var state = {
     config: {},
-    qa: assign(assign({}, DEFAULT_QA), externalQa),
     customer: {},
     customerProvided: null,
-    basket: { get: null, add: null },
+    basketGet: null,
+    basketAdd: null,
+    addCandidates: [],
     getTimer: null,
-    addTimer: null,
+    calls: { configure: 0, get: 0, add: 0, customerProvided: 0 },
     lastBasket: null,
-    errors: [],
-    calls: { configure: 0, identifyUser: 0, get: 0, add: 0, customerProvided: 0 },
   };
+
+  var qa = merge(
+    {
+      getIntervalMs: 10000,
+      autoStartGetPolling: true,
+      autoAddIntervalMs: 0,
+      exposeDebugApi: true,
+    },
+    isPlainObject(window.WAYBEAM_QA_STUB) ? window.WAYBEAM_QA_STUB : {}
+  );
 
   function isObject(value) {
     return value !== null && typeof value === 'object';
@@ -41,56 +46,43 @@
     return Object.prototype.toString.call(value) === '[object Object]';
   }
 
-  function assign(target, source) {
-    Object.keys(source || {}).forEach(function (key) {
-      target[key] = source[key];
+  function merge(base, patch) {
+    var out = {};
+    Object.keys(base || {}).forEach(function (key) { out[key] = base[key]; });
+    Object.keys(patch || {}).forEach(function (key) {
+      var value = patch[key];
+      if (value === undefined) return;
+      if (isPlainObject(value) && isPlainObject(out[key])) out[key] = merge(out[key], value);
+      else out[key] = value;
     });
-    return target;
+    return out;
   }
 
   function clone(value) {
     if (Array.isArray(value)) return value.slice();
     if (!isPlainObject(value)) return value;
-    return Object.keys(value).reduce(function (out, key) {
-      out[key] = clone(value[key]);
-      return out;
-    }, {});
-  }
-
-  function mergeConfig(base, patch) {
-    var out = isPlainObject(base) ? clone(base) : {};
-    Object.keys(patch || {}).forEach(function (key) {
-      var value = patch[key];
-      if (value === undefined) return;
-      out[key] = isPlainObject(value) ? mergeConfig(out[key], value) : clone(value);
-    });
+    var out = {};
+    Object.keys(value).forEach(function (key) { out[key] = clone(value[key]); });
     return out;
   }
 
-  function error(code, message, details) {
-    var payload = { code: code, message: message, details: details || null };
-    state.errors.push(payload);
+  function fail(code, message, details) {
     if (window.console && typeof window.console.error === 'function') {
       window.console.error(PREFIX + ' ' + code + ': ' + message, details || '');
     }
-    return payload;
-  }
-
-  function fail(code, message, details) {
-    var payload = error(code, message, details);
-    var exception = new Error(PREFIX + ' ' + code + ': ' + message);
-    exception.code = code;
-    exception.details = payload.details;
-    throw exception;
+    var error = new Error(PREFIX + ' ' + code + ': ' + message);
+    error.code = code;
+    error.details = details || null;
+    throw error;
   }
 
   function log(message, details) {
     if (window.console && typeof window.console.log === 'function') {
-      window.console.log(PREFIX + ' ' + message, details === undefined ? '' : details);
+      window.console.log(PREFIX + ' ' + message, details || '');
     }
   }
 
-  function optionalString(value, field, maxLength) {
+  function optionalText(value, field, maxLength) {
     if (value === undefined || value === null || value === '') return undefined;
     if (typeof value !== 'string') fail('INVALID_FIELD', field + ' must be a string', { field: field, value: value });
     var trimmed = value.trim();
@@ -99,39 +91,35 @@
     return trimmed;
   }
 
-  function requiredString(value, field, maxLength) {
-    var result = optionalString(value, field, maxLength);
-    if (!result) fail('MISSING_REQUIRED_FIELD', field + ' is required', { field: field });
-    return result;
+  function requiredText(value, field, maxLength) {
+    var text = optionalText(value, field, maxLength);
+    if (!text) fail('MISSING_FIELD', field + ' is required', { field: field });
+    return text;
   }
 
-  function quantity(value) {
+  function normalQuantity(value, field) {
     if (value === undefined || value === null || value === '') return 1;
-    var parsed = Number(value);
-    if (!Number.isFinite(parsed) || parsed <= 0) {
-      fail('INVALID_FIELD', 'quantity must be a positive number when supplied', { quantity: value });
+    var numberValue = Number(value);
+    if (!Number.isFinite(numberValue) || numberValue <= 0) {
+      fail('INVALID_FIELD', field + ' must be a positive number', { field: field, value: value });
     }
-    return Math.floor(parsed);
-  }
-
-  function validateNoSensitiveCustomerFields(customer) {
-    if (!isPlainObject(customer)) return;
-    if (Object.prototype.hasOwnProperty.call(customer, 'userEmail')) {
-      fail('SENSITIVE_CUSTOMER_FIELD', 'customer.userEmail must not be supplied by the host page', { field: 'customer.userEmail' });
-    }
-    if (Object.prototype.hasOwnProperty.call(customer, 'userPhone')) {
-      fail('SENSITIVE_CUSTOMER_FIELD', 'customer.userPhone must not be supplied by the host page', { field: 'customer.userPhone' });
-    }
+    return Math.floor(numberValue);
   }
 
   function validateCustomer(customer) {
     if (customer === undefined) return {};
     if (!isPlainObject(customer)) fail('INVALID_CUSTOMER', 'customer must be an object', { customer: customer });
-    validateNoSensitiveCustomerFields(customer);
+
+    if (customer.userEmail !== undefined) {
+      fail('INVALID_CUSTOMER', 'customer.userEmail must not be supplied by the host page', { field: 'customer.userEmail' });
+    }
+    if (customer.userPhone !== undefined) {
+      fail('INVALID_CUSTOMER', 'customer.userPhone must not be supplied by the host page', { field: 'customer.userPhone' });
+    }
 
     var out = {};
-    var userId = optionalString(customer.userId, 'customer.userId', 128);
-    var userName = optionalString(customer.userName, 'customer.userName', 128);
+    var userId = optionalText(customer.userId, 'customer.userId', 128);
+    var userName = optionalText(customer.userName, 'customer.userName', 128);
     if (userId) out.userId = userId;
     if (userName) out.userName = userName;
 
@@ -140,7 +128,7 @@
         fail('INVALID_CUSTOMER', 'customer.previousPurchases must be an array', { previousPurchases: customer.previousPurchases });
       }
       if (customer.previousPurchases.length > 10) {
-        fail('INVALID_CUSTOMER', 'customer.previousPurchases must contain at most 10 entries', { count: customer.previousPurchases.length });
+        fail('INVALID_CUSTOMER', 'customer.previousPurchases must contain no more than 10 entries', { count: customer.previousPurchases.length });
       }
       out.previousPurchases = customer.previousPurchases.slice();
     }
@@ -151,196 +139,183 @@
   function validateCustomerProvidedPayload(payload) {
     if (payload === undefined) return {};
     if (!isPlainObject(payload)) fail('INVALID_CUSTOMER_PROVIDED', 'customerProvided payload must be an object', { payload: payload });
+
     var out = {};
-    var userName = optionalString(payload.userName, 'userName', 128);
-    var userEmail = optionalString(payload.userEmail, 'userEmail', 256);
-    var userPhone = optionalString(payload.userPhone, 'userPhone', 64);
+    var userName = optionalText(payload.userName, 'userName', 128);
+    var userEmail = optionalText(payload.userEmail, 'userEmail', 256);
+    var userPhone = optionalText(payload.userPhone, 'userPhone', 64);
     if (userName) out.userName = userName;
     if (userEmail) out.userEmail = userEmail;
     if (userPhone) out.userPhone = userPhone;
     return out;
   }
 
-  function validateBasketItem(item, index) {
-    if (!isPlainObject(item)) fail('INVALID_BASKET_ITEM', 'basket.items[' + index + '] must be an object', { item: item });
+  function validateBasketLine(item, fieldPrefix) {
+    if (!isPlainObject(item)) fail('INVALID_BASKET_ITEM', fieldPrefix + ' must be an object', { item: item });
     return {
-      productUrl: requiredString(item.productUrl, 'items[' + index + '].productUrl', 2048),
-      productId: optionalString(item.productId, 'items[' + index + '].productId', 120),
-      variantId: requiredString(item.variantId, 'items[' + index + '].variantId', 120),
-      variantKey: requiredString(item.variantKey, 'items[' + index + '].variantKey', 180),
-      quantity: quantity(item.quantity),
+      productUrl: requiredText(item.productUrl, fieldPrefix + '.productUrl', 2048),
+      productId: optionalText(item.productId, fieldPrefix + '.productId', 120),
+      variantId: requiredText(item.variantId, fieldPrefix + '.variantId', 120),
+      variantKey: requiredText(item.variantKey, fieldPrefix + '.variantKey', 180),
+      quantity: normalQuantity(item.quantity, fieldPrefix + '.quantity'),
     };
   }
 
+  function itemQuantityTotal(items) {
+    return items.reduce(function (total, item) {
+      return total + normalQuantity(item.quantity, 'items[].quantity');
+    }, 0);
+  }
+
   function validateBasketGetResult(result) {
-    if (!isPlainObject(result)) fail('INVALID_BASKET_GET_RESULT', 'basket.get must resolve to an object', { result: result });
+    if (!isPlainObject(result)) fail('INVALID_BASKET_GET_RESULT', 'basket.get must return an object', { result: result });
     if (!Array.isArray(result.items)) fail('INVALID_BASKET_GET_RESULT', 'basket.get result.items must be an array', { result: result });
 
-    var items = result.items.map(validateBasketItem);
+    var items = result.items.map(function (item, index) {
+      return validateBasketLine(item, 'items[' + index + ']');
+    });
+
     var itemCount = Number(result.itemCount);
-    if (!Number.isFinite(itemCount) || itemCount < 0) {
-      fail('INVALID_BASKET_GET_RESULT', 'basket.get result.itemCount must be a non-negative number', { itemCount: result.itemCount });
+    if (!Number.isInteger(itemCount) || itemCount < 0) {
+      fail('INVALID_BASKET_GET_RESULT', 'basket.get result.itemCount must be a non-negative integer', { itemCount: result.itemCount });
+    }
+
+    var expectedItemCount = itemQuantityTotal(items);
+    if (itemCount !== expectedItemCount) {
+      fail('INVALID_BASKET_GET_RESULT', 'basket.get result.itemCount must equal the sum of item quantities', {
+        itemCount: itemCount,
+        expectedItemCount: expectedItemCount,
+        items: items,
+      });
     }
 
     return {
-      currency: requiredString(result.currency, 'currency', 12),
-      itemCount: Math.floor(itemCount),
+      currency: requiredText(result.currency, 'currency', 12),
+      itemCount: itemCount,
       items: items,
     };
   }
 
   function validateBasketAddInput(input) {
-    if (!isPlainObject(input)) fail('INVALID_BASKET_ADD_INPUT', 'basket.add input must be an object', { input: input });
-    return {
-      productUrl: requiredString(input.productUrl, 'productUrl', 2048),
-      productId: optionalString(input.productId, 'productId', 120),
-      variantId: requiredString(input.variantId, 'variantId', 120),
-      variantKey: requiredString(input.variantKey, 'variantKey', 180),
-      quantity: quantity(input.quantity),
-    };
+    return validateBasketLine(input, 'basket.add input');
   }
 
   function validateBasketAddResult(result) {
-    if (!isPlainObject(result)) fail('INVALID_BASKET_ADD_RESULT', 'basket.add must resolve to an object', { result: result });
+    if (!isPlainObject(result)) fail('INVALID_BASKET_ADD_RESULT', 'basket.add must return an object', { result: result });
     if (typeof result.ok !== 'boolean') fail('INVALID_BASKET_ADD_RESULT', 'basket.add result.ok must be boolean', { result: result });
     return result;
   }
 
-  function validateQaConfig(qa) {
-    if (qa === undefined) return;
-    if (!isPlainObject(qa)) fail('INVALID_QA_CONFIG', 'qa must be an object', { qa: qa });
-    ['getIntervalMs', 'autoAddIntervalMs'].forEach(function (field) {
-      if (qa[field] === undefined) return;
-      var numberValue = Number(qa[field]);
-      if (!Number.isFinite(numberValue) || numberValue < 0) fail('INVALID_QA_CONFIG', 'qa.' + field + ' must be a non-negative number', { value: qa[field] });
-    });
-    if (qa.autoStartGetPolling !== undefined && typeof qa.autoStartGetPolling !== 'boolean') {
-      fail('INVALID_QA_CONFIG', 'qa.autoStartGetPolling must be boolean', { value: qa.autoStartGetPolling });
-    }
-  }
-
-  function validateConfiguration(config) {
-    if (!isPlainObject(config)) fail('INVALID_CONFIGURE_PATCH', 'configure(patch) requires a plain object', { patch: config });
-
-    if (config.customer !== undefined) validateCustomer(config.customer);
-    if (config.customerProvided !== undefined && typeof config.customerProvided !== 'function') {
-      fail('INVALID_CUSTOMER_PROVIDED', 'customerProvided must be a function when supplied', { customerProvided: config.customerProvided });
-    }
-    if (config.basket !== undefined) {
-      if (!isPlainObject(config.basket)) fail('INVALID_BASKET_CONFIG', 'basket must be an object', { basket: config.basket });
-      if (config.basket.get !== undefined && typeof config.basket.get !== 'function') {
-        fail('INVALID_BASKET_CONFIG', 'basket.get must be a function when supplied', { get: config.basket.get });
-      }
-      if (config.basket.add !== undefined && typeof config.basket.add !== 'function') {
-        fail('INVALID_BASKET_CONFIG', 'basket.add must be a function when supplied', { add: config.basket.add });
-      }
-    }
-    if (config.addCandidates !== undefined) validateAddCandidates(config.addCandidates);
-    validateQaConfig(config.qa);
-  }
-
   function validateAddCandidates(candidates) {
     if (!Array.isArray(candidates)) fail('INVALID_ADD_CANDIDATES', 'addCandidates must be an array', { addCandidates: candidates });
-    return candidates.map(validateBasketAddInput);
+    return candidates.map(function (candidate, index) {
+      return validateBasketLine(candidate, 'addCandidates[' + index + ']');
+    });
   }
 
-  function applyConfiguration() {
-    var config = state.config;
-    state.customer = validateCustomer(config.customer);
-    state.customerProvided = typeof config.customerProvided === 'function' ? config.customerProvided : null;
+  function validateQaConfig(value) {
+    if (value === undefined) return;
+    if (!isPlainObject(value)) fail('INVALID_QA_CONFIG', 'qa must be an object', { qa: value });
+    ['getIntervalMs', 'autoAddIntervalMs'].forEach(function (field) {
+      if (value[field] === undefined) return;
+      if (!Number.isFinite(Number(value[field])) || Number(value[field]) < 0) {
+        fail('INVALID_QA_CONFIG', 'qa.' + field + ' must be a non-negative number', { value: value[field] });
+      }
+    });
+    if (value.autoStartGetPolling !== undefined && typeof value.autoStartGetPolling !== 'boolean') {
+      fail('INVALID_QA_CONFIG', 'qa.autoStartGetPolling must be boolean', { value: value.autoStartGetPolling });
+    }
+  }
 
-    var basket = isPlainObject(config.basket) ? config.basket : {};
-    state.basket.get = typeof basket.get === 'function' ? basket.get : null;
-    state.basket.add = typeof basket.add === 'function' ? basket.add : null;
+  function validateConfigurePatch(patch) {
+    if (!isPlainObject(patch)) fail('INVALID_CONFIGURE_PATCH', 'window.waybeam.configure(patch) expects an object', { patch: patch });
+    if (patch.customer !== undefined) validateCustomer(patch.customer);
+    if (patch.customerProvided !== undefined && typeof patch.customerProvided !== 'function') {
+      fail('INVALID_CONFIGURE_PATCH', 'customerProvided must be a function', { customerProvided: patch.customerProvided });
+    }
+    if (patch.basket !== undefined) {
+      if (!isPlainObject(patch.basket)) fail('INVALID_CONFIGURE_PATCH', 'basket must be an object', { basket: patch.basket });
+      if (patch.basket.get !== undefined && typeof patch.basket.get !== 'function') fail('INVALID_CONFIGURE_PATCH', 'basket.get must be a function', { get: patch.basket.get });
+      if (patch.basket.add !== undefined && typeof patch.basket.add !== 'function') fail('INVALID_CONFIGURE_PATCH', 'basket.add must be a function', { add: patch.basket.add });
+    }
+    if (patch.addCandidates !== undefined) validateAddCandidates(patch.addCandidates);
+    validateQaConfig(patch.qa);
+  }
 
-    if (config.qa !== undefined) state.qa = assign(assign({}, state.qa), config.qa);
-    if (config.addCandidates !== undefined) state.addCandidates = validateAddCandidates(config.addCandidates);
+  function applyConfig() {
+    state.customer = validateCustomer(state.config.customer);
+    state.customerProvided = typeof state.config.customerProvided === 'function' ? state.config.customerProvided : null;
+    state.basketGet = state.config.basket && typeof state.config.basket.get === 'function' ? state.config.basket.get : null;
+    state.basketAdd = state.config.basket && typeof state.config.basket.add === 'function' ? state.config.basket.add : null;
+    state.addCandidates = state.config.addCandidates ? validateAddCandidates(state.config.addCandidates) : state.addCandidates;
+    if (state.config.qa) qa = merge(qa, state.config.qa);
   }
 
   function configure(patch) {
     state.calls.configure += 1;
-    validateConfiguration(patch);
-    state.config = mergeConfig(state.config, patch);
-    applyConfiguration();
+    validateConfigurePatch(patch);
+    state.config = merge(state.config, patch);
+    applyConfig();
     restartTimers();
-    log('configured', publicState());
+    log('configured', snapshot());
   }
 
   function identifyUser(customer) {
-    state.calls.identifyUser += 1;
     configure({ customer: customer });
   }
 
-  function candidates() {
-    if (Array.isArray(state.addCandidates)) return state.addCandidates.slice();
+  function configuredCandidates() {
+    if (state.addCandidates.length > 0) return state.addCandidates.slice();
     if (Array.isArray(window.WAYBEAM_QA_ADD_CANDIDATES)) return validateAddCandidates(window.WAYBEAM_QA_ADD_CANDIDATES);
     return [];
   }
 
   function randomCandidate() {
-    var list = candidates();
-    if (list.length === 0) fail('MISSING_ADD_CANDIDATES', 'No valid add candidates configured', { expected: 'window.WAYBEAM_QA_ADD_CANDIDATES or configure({ addCandidates })' });
+    var list = configuredCandidates();
+    if (list.length === 0) {
+      fail('MISSING_ADD_CANDIDATES', 'No add candidates configured. Set window.WAYBEAM_QA_ADD_CANDIDATES or configure({ addCandidates }).');
+    }
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  function requireHandler(name, handler) {
-    if (typeof handler !== 'function') fail('MISSING_HANDLER', name + ' is not configured', { handler: name });
-  }
-
-  async function callBasketGet() {
+  async function getBasket() {
     state.calls.get += 1;
-    requireHandler('basket.get', state.basket.get);
-    try {
-      var result = validateBasketGetResult(await state.basket.get());
-      state.lastBasket = result;
-      log('basket.get result', result);
-      return result;
-    } catch (exception) {
-      if (!exception || !exception.code) error('BASKET_GET_FAILED', 'basket.get failed', exception);
-      throw exception;
-    }
+    if (typeof state.basketGet !== 'function') fail('MISSING_HANDLER', 'basket.get is not configured');
+    var result = validateBasketGetResult(await state.basketGet());
+    state.lastBasket = result;
+    log('basket.get result', result);
+    return result;
   }
 
-  async function callBasketAdd(input) {
+  async function addToBasket(input) {
     state.calls.add += 1;
-    requireHandler('basket.add', state.basket.add);
-    var normalizedInput = validateBasketAddInput(input || randomCandidate());
-    try {
-      log('basket.add input', normalizedInput);
-      var result = validateBasketAddResult(await state.basket.add(normalizedInput));
-      log('basket.add result', result);
-      return result;
-    } catch (exception) {
-      if (!exception || !exception.code) error('BASKET_ADD_FAILED', 'basket.add failed', exception);
-      throw exception;
-    }
+    if (typeof state.basketAdd !== 'function') fail('MISSING_HANDLER', 'basket.add is not configured');
+    var request = validateBasketAddInput(input || randomCandidate());
+    log('basket.add input', request);
+    var result = validateBasketAddResult(await state.basketAdd(request));
+    log('basket.add result', result);
+    return result;
   }
 
-  async function callCustomerProvided(payload) {
+  async function customerProvided(payload) {
     state.calls.customerProvided += 1;
-    requireHandler('customerProvided', state.customerProvided);
-    var cleanPayload = validateCustomerProvidedPayload(payload);
-    try {
-      var result = await state.customerProvided(cleanPayload);
-      if (result !== undefined && (!isPlainObject(result) || result.ok !== true)) {
-        fail('INVALID_CUSTOMER_PROVIDED_RESULT', 'customerProvided should resolve to { ok: true } when returning a value', { result: result });
-      }
-      log('customerProvided result', result);
-      return result;
-    } catch (exception) {
-      if (!exception || !exception.code) error('CUSTOMER_PROVIDED_FAILED', 'customerProvided failed', exception);
-      throw exception;
+    if (typeof state.customerProvided !== 'function') fail('MISSING_HANDLER', 'customerProvided is not configured');
+    var result = await state.customerProvided(validateCustomerProvidedPayload(payload));
+    if (result !== undefined && (!isPlainObject(result) || result.ok !== true)) {
+      fail('INVALID_CUSTOMER_PROVIDED_RESULT', 'customerProvided should return { ok: true } when it returns a value', { result: result });
     }
+    log('customerProvided result', result);
+    return result;
   }
 
   function startGetPolling() {
     stopGetPolling();
-    var interval = Number(state.qa.getIntervalMs);
-    if (!Number.isFinite(interval) || interval <= 0) return;
+    if (qa.autoStartGetPolling === false) return;
+    if (!qa.getIntervalMs) return;
     state.getTimer = window.setInterval(function () {
-      callBasketGet().catch(function () {});
-    }, interval);
-    log('basket.get polling started every ' + interval + 'ms');
+      getBasket().catch(function () {});
+    }, Number(qa.getIntervalMs));
+    log('basket.get polling started every ' + qa.getIntervalMs + 'ms');
   }
 
   function stopGetPolling() {
@@ -350,12 +325,11 @@
 
   function startAutoAdd() {
     stopAutoAdd();
-    var interval = Number(state.qa.autoAddIntervalMs || 0);
-    if (!Number.isFinite(interval) || interval <= 0) return;
+    if (!qa.autoAddIntervalMs) return;
     state.addTimer = window.setInterval(function () {
-      callBasketAdd().catch(function () {});
-    }, interval);
-    log('automatic basket.add started every ' + interval + 'ms');
+      addToBasket().catch(function () {});
+    }, Number(qa.autoAddIntervalMs));
+    log('automatic basket.add started every ' + qa.autoAddIntervalMs + 'ms');
   }
 
   function stopAutoAdd() {
@@ -364,61 +338,55 @@
   }
 
   function restartTimers() {
-    if (state.qa.autoStartGetPolling === false) stopGetPolling();
-    else startGetPolling();
+    startGetPolling();
     startAutoAdd();
   }
 
-  function publicState() {
+  function snapshot() {
     return {
       version: VERSION,
-      hasBasketGet: typeof state.basket.get === 'function',
-      hasBasketAdd: typeof state.basket.add === 'function',
+      hasBasketGet: typeof state.basketGet === 'function',
+      hasBasketAdd: typeof state.basketAdd === 'function',
       hasCustomerProvided: typeof state.customerProvided === 'function',
-      customer: clone(state.customer),
-      addCandidateCount: candidates().length,
+      addCandidateCount: configuredCandidates().length,
       getPolling: Boolean(state.getTimer),
       autoAdd: Boolean(state.addTimer),
+      customer: clone(state.customer),
       calls: clone(state.calls),
-      errors: state.errors.slice(),
       lastBasket: clone(state.lastBasket),
     };
   }
 
   function replayQueuedCalls() {
-    queuedCalls.forEach(function (entry, index) {
-      if (Array.isArray(entry)) {
-        if (entry[0] === 'configure') return configure(entry[1]);
-        if (entry[0] === 'identifyUser') return identifyUser(entry[1]);
-      }
-      if (isPlainObject(entry)) {
-        if (entry.type === 'configure') return configure(entry.config || entry.patch);
-        if (entry.type === 'identifyUser') return identifyUser(entry.customer);
-      }
+    queued.forEach(function (entry, index) {
+      if (Array.isArray(entry) && entry[0] === 'configure') return configure(entry[1]);
+      if (Array.isArray(entry) && entry[0] === 'identifyUser') return identifyUser(entry[1]);
+      if (isPlainObject(entry) && entry.type === 'configure') return configure(entry.config || entry.patch);
+      if (isPlainObject(entry) && entry.type === 'identifyUser') return identifyUser(entry.customer);
       fail('INVALID_QUEUE_ENTRY', 'Unsupported pre-load queue entry', { index: index, entry: entry });
     });
   }
 
-  existingApi.configure = configure;
-  existingApi.identifyUser = identifyUser;
-  existingApi._q = [];
-  existingApi.qaStub = {
-    state: publicState,
-    get: callBasketGet,
-    add: callBasketAdd,
-    addRandom: function () { return callBasketAdd(); },
-    customerProvided: callCustomerProvided,
-    candidates: candidates,
+  existing.configure = configure;
+  existing.identifyUser = identifyUser;
+  existing._q = [];
+  existing.qaStub = {
+    state: snapshot,
+    get: getBasket,
+    add: addToBasket,
+    addRandom: function () { return addToBasket(); },
+    customerProvided: customerProvided,
+    candidates: configuredCandidates,
     startGetPolling: startGetPolling,
     stopGetPolling: stopGetPolling,
     startAutoAdd: startAutoAdd,
     stopAutoAdd: stopAutoAdd,
   };
 
-  window.waybeam = existingApi;
-  if (state.qa.exposeDebugApi !== false) window.waybeamQaStub = existingApi.qaStub;
+  window.waybeam = existing;
+  if (qa.exposeDebugApi !== false) window.waybeamQaStub = existing.qaStub;
 
   replayQueuedCalls();
   restartTimers();
-  log('installed. Try window.waybeamQaStub.state(), .get(), .addRandom(), .add(input).', publicState());
+  log('installed. Try window.waybeamQaStub.state(), .get(), .addRandom(), .add(input).', snapshot());
 })(window);
