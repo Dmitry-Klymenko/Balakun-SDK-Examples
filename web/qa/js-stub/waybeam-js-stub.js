@@ -1,17 +1,17 @@
 /*
  * Waybeam JS API QA Stub
  *
- * A small browser helper for checking a host page's Waybeam JavaScript API integration.
- * It is intentionally strict: wrong shapes are logged with console.error and then thrown.
+ * Small browser helper for checking a host page's Waybeam JavaScript API integration.
+ * It does not load or render the real Waybeam widget.
  *
- * This file does not load or render the real Waybeam widget.
- * Use it only for local QA, staging checks, and integrator troubleshooting.
+ * Wrong shapes are intentionally loud: console.error first, then throw.
+ * Use this only for local QA, staging checks, and integrator troubleshooting.
  */
 (function installWaybeamQaStub(window) {
   'use strict';
 
   var PREFIX = '[Waybeam QA Stub]';
-  var VERSION = '0.2.2';
+  var VERSION = '0.2.3';
 
   var existing = isObject(window.waybeam) ? window.waybeam : {};
   var queued = Array.isArray(existing._q) ? existing._q.slice() : [];
@@ -24,6 +24,7 @@
     basketAdd: null,
     addCandidates: [],
     getTimer: null,
+    addTimer: null,
     calls: { configure: 0, get: 0, add: 0, customerProvided: 0 },
     lastBasket: null,
   };
@@ -38,6 +39,8 @@
     isPlainObject(window.WAYBEAM_QA_STUB) ? window.WAYBEAM_QA_STUB : {}
   );
 
+  validateQaConfig(qa);
+
   function isObject(value) {
     return value !== null && typeof value === 'object';
   }
@@ -51,9 +54,7 @@
     Object.keys(base || {}).forEach(function (key) { out[key] = base[key]; });
     Object.keys(patch || {}).forEach(function (key) {
       var value = patch[key];
-      if (value === undefined) return;
-      if (isPlainObject(value) && isPlainObject(out[key])) out[key] = merge(out[key], value);
-      else out[key] = value;
+      if (value !== undefined) out[key] = value;
     });
     return out;
   }
@@ -161,12 +162,6 @@
     };
   }
 
-  function itemQuantityTotal(items) {
-    return items.reduce(function (total, item) {
-      return total + normalQuantity(item.quantity, 'items[].quantity');
-    }, 0);
-  }
-
   function validateBasketGetResult(result) {
     if (!isPlainObject(result)) fail('INVALID_BASKET_GET_RESULT', 'basket.get must return an object', { result: result });
     if (!Array.isArray(result.items)) fail('INVALID_BASKET_GET_RESULT', 'basket.get result.items must be an array', { result: result });
@@ -180,9 +175,12 @@
       fail('INVALID_BASKET_GET_RESULT', 'basket.get result.itemCount must be a non-negative integer', { itemCount: result.itemCount });
     }
 
-    var expectedItemCount = itemQuantityTotal(items);
+    var expectedItemCount = items.reduce(function (total, item) {
+      return total + item.quantity;
+    }, 0);
+
     if (itemCount !== expectedItemCount) {
-      fail('INVALID_BASKET_GET_RESULT', 'basket.get result.itemCount must equal the sum of item quantities', {
+      fail('INVALID_BASKET_GET_RESULT', 'basket.get result.itemCount must match items: sum of quantity, defaulting missing quantity to 1', {
         itemCount: itemCount,
         expectedItemCount: expectedItemCount,
         items: items,
@@ -216,15 +214,19 @@
   function validateQaConfig(value) {
     if (value === undefined) return;
     if (!isPlainObject(value)) fail('INVALID_QA_CONFIG', 'qa must be an object', { qa: value });
+
     ['getIntervalMs', 'autoAddIntervalMs'].forEach(function (field) {
       if (value[field] === undefined) return;
       if (!Number.isFinite(Number(value[field])) || Number(value[field]) < 0) {
         fail('INVALID_QA_CONFIG', 'qa.' + field + ' must be a non-negative number', { value: value[field] });
       }
     });
-    if (value.autoStartGetPolling !== undefined && typeof value.autoStartGetPolling !== 'boolean') {
-      fail('INVALID_QA_CONFIG', 'qa.autoStartGetPolling must be boolean', { value: value.autoStartGetPolling });
-    }
+
+    ['autoStartGetPolling', 'exposeDebugApi'].forEach(function (field) {
+      if (value[field] !== undefined && typeof value[field] !== 'boolean') {
+        fail('INVALID_QA_CONFIG', 'qa.' + field + ' must be boolean', { value: value[field] });
+      }
+    });
   }
 
   function validateConfigurePatch(patch) {
@@ -310,7 +312,7 @@
 
   function startGetPolling() {
     stopGetPolling();
-    if (qa.autoStartGetPolling === false) return;
+    if (!state.basketGet) return;
     if (!qa.getIntervalMs) return;
     state.getTimer = window.setInterval(function () {
       getBasket().catch(function () {});
@@ -325,6 +327,7 @@
 
   function startAutoAdd() {
     stopAutoAdd();
+    if (!state.basketAdd) return;
     if (!qa.autoAddIntervalMs) return;
     state.addTimer = window.setInterval(function () {
       addToBasket().catch(function () {});
@@ -338,7 +341,9 @@
   }
 
   function restartTimers() {
-    startGetPolling();
+    stopGetPolling();
+    stopAutoAdd();
+    if (qa.autoStartGetPolling !== false) startGetPolling();
     startAutoAdd();
   }
 
