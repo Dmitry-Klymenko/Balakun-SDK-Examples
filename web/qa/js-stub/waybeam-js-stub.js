@@ -11,7 +11,6 @@
   'use strict';
 
   var PREFIX = '[Waybeam QA Stub]';
-  var VERSION = '0.2.4';
 
   var existing = isObject(window.waybeam) ? window.waybeam : {};
   var queued = Array.isArray(existing._q) ? existing._q.slice() : [];
@@ -355,7 +354,6 @@
 
   function snapshot() {
     return {
-      version: VERSION,
       hasBasketGet: typeof state.basketGet === 'function',
       hasBasketAdd: typeof state.basketAdd === 'function',
       hasCustomerProvided: typeof state.customerProvided === 'function',
