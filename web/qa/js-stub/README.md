@@ -21,6 +21,14 @@ This is not a widget and does not render UI.
 
 ## Test
 
+Use `web/qa/js-stub/install-snippet.js`.
+
+**Add your own basket.get implementation inside `basket.get()` in `install-snippet.js`.**
+
+**Add your own basket.add implementation inside `basket.add(input)` in `install-snippet.js`.**
+
+Then run:
+
 ```js
 await waybeamQaStub.get();
 await waybeamQaStub.add({
@@ -74,4 +82,5 @@ waybeamQaStub.startGetPolling();
 - Do not pass customer email or phone through `customer`; those are callback outputs only.
 - Use the documented camelCase field names. The QA stub does not accept snake_case aliases.
 - Replace example basket handlers with the host site's real basket API calls.
+- `cdn.jsdelivr.net` fetches from the public GitHub repo and caches the file. You do not publish to jsDelivr separately.
 - For immutable QA runs, pin the jsDelivr URL to a commit SHA instead of `@main`.
