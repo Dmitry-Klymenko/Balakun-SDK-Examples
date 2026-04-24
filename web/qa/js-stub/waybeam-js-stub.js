@@ -11,7 +11,7 @@
   'use strict';
 
   var PREFIX = '[Waybeam QA Stub]';
-  var VERSION = '0.2.3';
+  var VERSION = '0.2.4';
 
   var existing = isObject(window.waybeam) ? window.waybeam : {};
   var queued = Array.isArray(existing._q) ? existing._q.slice() : [];
@@ -67,6 +67,7 @@
     return out;
   }
 
+  /** Log a clear protocol error and stop the current QA action. */
   function fail(code, message, details) {
     if (window.console && typeof window.console.error === 'function') {
       window.console.error(PREFIX + ' ' + code + ': ' + message, details || '');
@@ -107,6 +108,7 @@
     return Math.floor(numberValue);
   }
 
+  /** Validate host-supplied customer context. Email and phone are intentionally blocked here. */
   function validateCustomer(customer) {
     if (customer === undefined) return {};
     if (!isPlainObject(customer)) fail('INVALID_CUSTOMER', 'customer must be an object', { customer: customer });
@@ -137,6 +139,7 @@
     return out;
   }
 
+  /** Validate details passed from Waybeam back to the host callback. */
   function validateCustomerProvidedPayload(payload) {
     if (payload === undefined) return {};
     if (!isPlainObject(payload)) fail('INVALID_CUSTOMER_PROVIDED', 'customerProvided payload must be an object', { payload: payload });
@@ -151,6 +154,7 @@
     return out;
   }
 
+  /** Validate one basket line used by basket.get, basket.add, and addCandidates. */
   function validateBasketLine(item, fieldPrefix) {
     if (!isPlainObject(item)) fail('INVALID_BASKET_ITEM', fieldPrefix + ' must be an object', { item: item });
     return {
@@ -162,6 +166,7 @@
     };
   }
 
+  /** Validate basket.get output, including itemCount matching item quantities. */
   function validateBasketGetResult(result) {
     if (!isPlainObject(result)) fail('INVALID_BASKET_GET_RESULT', 'basket.get must return an object', { result: result });
     if (!Array.isArray(result.items)) fail('INVALID_BASKET_GET_RESULT', 'basket.get result.items must be an array', { result: result });
@@ -229,6 +234,7 @@
     });
   }
 
+  /** Validate one window.waybeam.configure(...) patch before applying it. */
   function validateConfigurePatch(patch) {
     if (!isPlainObject(patch)) fail('INVALID_CONFIGURE_PATCH', 'window.waybeam.configure(patch) expects an object', { patch: patch });
     if (patch.customer !== undefined) validateCustomer(patch.customer);
