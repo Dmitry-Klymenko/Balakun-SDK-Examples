@@ -30,7 +30,7 @@
 
   var qa = merge(
     {
-      getIntervalMs: 10000,
+      getIntervalMs: 50000,
       autoStartGetPolling: true,
       autoAddIntervalMs: 0,
       exposeDebugApi: true,
@@ -53,7 +53,8 @@
     Object.keys(base || {}).forEach(function (key) { out[key] = base[key]; });
     Object.keys(patch || {}).forEach(function (key) {
       var value = patch[key];
-      if (value !== undefined) out[key] = value;
+      if (value === undefined) return;
+      out[key] = isPlainObject(value) && isPlainObject(out[key]) ? merge(out[key], value) : value;
     });
     return out;
   }
@@ -101,10 +102,10 @@
   function normalQuantity(value, field) {
     if (value === undefined || value === null || value === '') return 1;
     var numberValue = Number(value);
-    if (!Number.isFinite(numberValue) || numberValue <= 0) {
-      fail('INVALID_FIELD', field + ' must be a positive number', { field: field, value: value });
+    if (!Number.isInteger(numberValue) || numberValue <= 0) {
+      fail('INVALID_FIELD', field + ' must be a positive integer', { field: field, value: value });
     }
-    return Math.floor(numberValue);
+    return numberValue;
   }
 
   /** Validate host-supplied customer context. Email and phone are intentionally blocked here. */
