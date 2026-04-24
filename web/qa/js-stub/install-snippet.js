@@ -20,10 +20,12 @@ window.waybeam.configure({
   },
   basket: {
     async get() {
+      // ADD YOUR IMPLEMENTATION HERE, OR UNCOMMENT/KEEP THE DEFAULT HARDCODED RESPONSE BELOW.
       console.log('[Host test] basket.get');
       return { currency: 'AUD', itemCount: 0, items: [] };
     },
     async add(input) {
+      // ADD YOUR IMPLEMENTATION HERE, OR UNCOMMENT/KEEP THE DEFAULT HARDCODED RESPONSE BELOW.
       console.log('[Host test] basket.add', input);
       return { ok: true };
     },
